@@ -47,6 +47,8 @@ exports.getDocumentById = async (req, res) => {
   }
 }
 
+
+// Not tested
 exports.createDocument = async (req, res) => {
   const { document_name, form_values } = req.body;
 

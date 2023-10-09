@@ -42,7 +42,7 @@
           </template>
         </v-data-table>
         <v-dialog
-          v-model="newDocument"
+          v-model="newDocumentWindow"
           max-width="450px"
           >
           <v-card>
@@ -51,17 +51,29 @@
             </v-card-title>
             <v-card-text>
               <v-form>
-                <v-container v-for="(field, index) in fields" :key="index">
+                <v-container>
                   <v-row>
-                    <v-text-field v-model="field.weight" label="Field sequence (weight)"></v-text-field>
+                    <v-text-field v-model="newDocument.document_name" label="Document title"></v-text-field>
+                  </v-row>
+                </v-container>
+                <v-divider></v-divider>
+                <v-container v-for="(field, index) in newDocument.fields" :key="index">
+                  <v-row>
+                    <v-text-field v-model="field.field_seq" label="Field sequence (weight)"></v-text-field>
                   </v-row>
                   <v-row>
-                    <v-select :items="documentOptions" v-model="field.type" label="Field type"></v-select>
+                    <v-select :items="documentOptions" v-model="field.field_type" label="Field type"></v-select>
                   </v-row>
                   <v-row>
-                    <v-text-field v-model="field.name" label="Field name"></v-text-field>
+                    <v-text-field v-model="field.field_name" label="Field name"></v-text-field>
                   </v-row>
-                  <v-switch v-model="field.mandatory" label="Mandatory" color="indigo"></v-switch>
+                  <v-row>
+                    <v-checkbox
+                    v-model="field.is_mandatory"
+                    label="Mandatory"
+                    color="indigo"
+                  ></v-checkbox>
+                  </v-row>
                 </v-container>
               </v-form>
             </v-card-text>
@@ -73,7 +85,6 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-          
           <!--<v-table class="border" style="border-radius: 10px;">
             <thead>
               <tr>
@@ -96,6 +107,7 @@
           </v-table>-->
         </v-col>
       </v-row>
+      <p>{{ newDocument }}</p>
     </v-responsive>
   </v-container>
 </template>
@@ -107,8 +119,16 @@ export default {
   data() {
     return {
       itemsPerPage: 15,
-      newDocument: false,
-      fields: [{ weight: '', type: '', name: '', mandatory: false }],
+      newDocumentWindow: false,
+
+      newDocument: {
+        document_name: '',
+        fields: [{ field_seq: '', field_type: '', field_name: '', is_mandatory: false }],
+      },
+
+
+
+      
 
       documentOptions: [
         'Input',
@@ -134,30 +154,29 @@ export default {
 
   methods: {
     newDocumentDialog() {
-      this.newDocument = true;
+      this.newDocument.fields = [{ field_seq: '', field_type: '', field_name: '', is_mandatory: false }];
+      this.newDocumentWindow = true;
     },
     formatDate(dateString) {
       const newDate = new Date(dateString)
       return newDate.toLocaleString()
     },
     addField() {
-      this.fields.push({ weight: '', type: '', name: '', mandatory: false });
+      this.newDocument.fields.push({ field_seq: '', field_type: '', field_name: '', is_mandatory: false });
     },
     cancel() {
-      this.newDocument = false;
-      this.fields = [{ weight: '', type: '', name: '', mandatory: false }];
+      this.newDocumentWindow = false;
+      this.newDocument.fields = [{ field_seq: '', field_type: '', field_name: '', is_mandatory: false }];
     },
     save() {
       // Needs saving via axios
-      this.newDocument = false;
+      this.newDocumentWindow = false;
     }
   },
 
   async created() {
-    let documents = await axios.get('http://localhost:3000/api/v1/documents')
+    let documents = await axios.get('http://localhost:3001/api/v1/documents')
     this.documents = documents.data;
-
-    console.log(documents.data)
   }
 
 }
