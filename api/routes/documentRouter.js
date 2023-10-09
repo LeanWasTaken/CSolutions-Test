@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const documentController = require('../controllers/documentController');
 
-router.get('/', documentController.getLoggedInUser);
-router.post('/register', documentController.registerUser);
-router.post('/login', documentController.loginUser);
+router.get('/', documentController.getAllDocuments);
+router.get('/:id', documentController.getDocumentById);
+router.post('/create', documentController.createDocument);
 
 
 
