@@ -8,17 +8,19 @@
 
 ## How to start the project:
 
+#### Install dependencies
+
 ```sh
 npm install
 ```
 
-### Frontend
+#### Start the frontend (Dev-mode)
 
 ```sh
 npm run dev
 ```
 
-### Hot-Reload REST API
+#### Start REST API (Hot-Reload)
 
 ```sh
 npm run server
